@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Resource, Api
 
 app = Flask(__name__)
@@ -8,15 +8,18 @@ items = []
 
 class Item(Resource):
     def get(self, name):
-        if items:
-            for item in items:
-                if name == item['name']:
-                    return item
-        return {'item': None}, 404
+        item = next(filter(lambda x: x['name'] == name, items), None)
+        return {'item': item}, 200 if item else 404
 
     def post(self, name):
-        item = {'name': name, 'price': 12.99}
+
+        if next(filter(lambda x: x['name'] == name, items), None):
+            return {'message': "An item w name '{}' exists.".format(name)}, 400
+
+        data = request.get_json()
+        item = {'name': name, 'price': data['price']}
         items.append(item)
+
         return item, 201
 
     def put(self, name):
@@ -25,6 +28,15 @@ class Item(Resource):
     def delete(self, name):
         pass
 
-api.add_resource(Item, '/item/<string:name>')
 
-app.run(host='192.168.1.10', port=5000)
+class ItemList(Resource):
+    def get(self):
+        if items:
+            return {'items': items}
+        return {'items': None}, 404
+
+api.add_resource(Item, '/item/<string:name>')
+api.add_resource(ItemList, '/items')
+
+app.run(host='192.168.1.10', port=5000, debug=True)
+
