@@ -11,7 +11,7 @@ Install virtualenv
 
 Create an virtual environment
 
-    virtualenv venv --python=python3.6.8
+    virtualenv venv --python=python3.6      # python3.6.8 did not work
 
 Activate the environment
 
