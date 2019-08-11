@@ -12,14 +12,11 @@ class Item(Resource):
         return {'item': item}, 200 if item else 404
 
     def post(self, name):
-
         if next(filter(lambda x: x['name'] == name, items), None):
             return {'message': "An item w name '{}' exists.".format(name)}, 400
-
         data = request.get_json()
         item = {'name': name, 'price': data['price']}
         items.append(item)
-
         return item, 201
 
     def put(self, name):
