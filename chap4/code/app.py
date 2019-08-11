@@ -27,11 +27,31 @@ class Item(Resource):
         items.append(item)
         return item, 201
 
-    def put(self, name):
-        pass
-
+    #@jwt_required()
     def delete(self, name):
-        pass
+        #for item in items:
+            #if name == item['name']:
+                #items.remove(item)
+                #return {"name": "Removed"}
+        #return {"name": "Not found"}, 400
+
+        # items.remove(item: item in items if item['name'] == name)
+
+        global items
+        items = list(filter(lambda item: item['name'] != name, items))
+        return {"name": "Removed"}
+
+    def put(self, name):
+        data = request.get_json()
+        item = next(filter(lambda x: x['name'] == name, items), None)
+        if item:
+            #item['price'] = data['price']
+            item.update(data)
+            return item
+        else:
+            item = {'name': name, 'price': data['price']}
+            items.append(item)
+            return item, 201
 
 
 class ItemList(Resource):
