@@ -1,27 +1,13 @@
+from users import Users
+
+
 users = [
-    {
-        'id': 1,
-        'username': 'bob'
-        'password': 'asdf'
-    }
+    User(1, 'bob', 'asdf')
 ]
 
-username_mapping = {
-    'bob': {
-        'id': 1,
-        'username': 'bob'
-        'password': 'asdf'
-    }
-}
+username_mapping = {user.username: user for user in users}
 
-userid_mapping = {
-    1: {
-        'id': 1,
-        'username': 'bob'
-        'password': 'asdf'
-    }
-} 
-
+userid_mapping = {user.id: user for user in users} 
 
 def authentication(username, password):
     user = username_mapping.get(username, None)
