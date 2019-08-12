@@ -14,6 +14,15 @@ jwt = JWT(app, authenticate, identity)      # creates /auth end point
 items = []
 
 class Item(Resource):
+    #data = request.get_json()
+    parser = reqparse.RequestParser()
+    parser.add_argument('price',
+        type=float,
+        required=True,
+        help="This field cannot be left blank!"
+    )
+
+
     @jwt_required()     # nust authenticate before using 'get' method
     def get(self, name):
         item = next(filter(lambda x: x['name'] == name, items), None)
@@ -22,7 +31,8 @@ class Item(Resource):
     def post(self, name):
         if next(filter(lambda x: x['name'] == name, items), None):
             return {'message': "An item w name '{}' exists.".format(name)}, 400
-        data = request.get_json()
+        #data = request.get_json()
+        data = Item.parser.parse_args()
         item = {'name': name, 'price': data['price']}
         items.append(item)
         return item, 201
@@ -43,14 +53,7 @@ class Item(Resource):
 
     def put(self, name):
         #data = request.get_json()
-        parser = reqparse.RequestParser()
-        parser.add_argument('price',
-            type=float,
-            required=True,
-            help="This field cannot be left blank!"
-        )
-        data = parser.parse_args()
-
+        data = Item.parser.parse_args()
         item = next(filter(lambda x: x['name'] == name, items), None)
         if item:
             #item['price'] = data['price']

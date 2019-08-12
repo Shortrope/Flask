@@ -1,12 +1,16 @@
 from flask_restful import Resource, Api, reqparse
 
-def put(self, name):
-    #data = request.get_json()
+class Item(Resource):
+
     parser = reqparse.RequestParser()
     parser.add_argument('price',
         type=float,
         required=True,
         help="This field cannot be left blank!"
     )
-    data = parser.parse_args()
+
+
+def put(self, name):
+    #data = request.get_json()
+    data = Item.parser.parse_args()     # use the class method
 
