@@ -1,4 +1,4 @@
-from flask_restful import Resource, Api, reqparser
+from flask_restful import Resource, Api, reqparse
 
 def put(self, name):
     #data = request.get_json()
